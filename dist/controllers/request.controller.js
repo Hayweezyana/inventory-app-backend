@@ -12,7 +12,12 @@ const createRequest = async (req, res) => {
         const request = await Request_1.Request.query().insert({ user_id: userId });
         for (const { item_id, quantity_requested } of items) {
             const item = await Item_1.Item.query().findById(item_id);
-            if (!item || item.quantity < quantity_requested) {
+            if (!item) {
+                console.error(`Item with ID ${item_id} not found`);
+                return res.status(404).json({ error: `Item with ID ${item_id} not found` });
+            }
+            if (item.quantity < quantity_requested) {
+                console.error(`Insufficient stock for item ID ${item_id}: requested ${quantity_requested}, available ${item.quantity}`);
                 return res.status(400).json({ error: `Insufficient quantity for item ID ${item_id}` });
             }
             await RequestItem_1.RequestItem.query().insert({
@@ -68,7 +73,7 @@ const returnRequest = async (req, res) => {
 exports.returnRequest = returnRequest;
 const getRequests = async (req, res) => {
     const requests = await Request_1.Request.query()
-        .withGraphFetched('items')
+        .withGraphFetched('[items.item, user]')
         .orderBy('created_at', 'desc');
     res.json(requests);
 };

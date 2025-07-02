@@ -31,6 +31,25 @@ const knexConfig: { [key: string]: Knex.Config } = {
       directory: path.resolve(__dirname, 'seeds'),
     },
   },
+  production: {
+    client: 'pg',
+    connection: {
+      host: dbConfig.host ?? undefined,
+      port: dbConfig.port ? parseInt(dbConfig.port) : 5432,
+      database: dbConfig.database ?? undefined,
+      user: dbConfig.user,
+      password: dbConfig.password,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
+    migrations: {
+      directory: path.resolve(__dirname, 'migrations'),
+    },
+    seeds: {
+      directory: path.resolve(__dirname, 'seeds'),
+    },
+  }
 };
 
 export default knexConfig;

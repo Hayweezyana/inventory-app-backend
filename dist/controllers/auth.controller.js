@@ -22,7 +22,12 @@ const login = async (req, res) => {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
     const token = jsonwebtoken_1.default.sign({ id: user.id, level: user.level }, JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token });
+    res.json({ token,
+        user: {
+            id: user.id,
+            username: user.username,
+            level: user.level,
+        }, });
 };
 exports.login = login;
 const listUsers = async (req, res) => {

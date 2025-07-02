@@ -19,7 +19,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // Connect Objection to Knex
-const db = (0, knex_1.default)(knexfile_1.default);
+const db = (0, knex_1.default)(knexfile_1.default[process.env.NODE_ENV || 'development']);
 objection_1.Model.knex(db);
 // API routes
 app.use('/api/auth', auth_routes_1.default);
